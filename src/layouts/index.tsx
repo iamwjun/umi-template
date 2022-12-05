@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
-import { history, IRoute, Link, useOutlet } from 'umi';
+import { history, IRoute, Link, useOutlet, Outlet, useOutletContext } from 'umi';
 
 import styles from './index.less';
 
@@ -39,10 +39,11 @@ const { Item, SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 
 
-const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
-  const a = useOutlet();
-  console.log(a);
+const BasicLayout: React.FC<BasicLayoutProps> = () => {
+  const props = useOutletContext();
 
+  console.log('props', props);
+  
   const onRedirect = (config: IRoute) => {
     if (config.path) {
       history.push(config.path);
@@ -57,17 +58,26 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     ));
   };
 
+  const items = () => {
+    return (props?.route?.routes || []).map((item: IRoute) =>
+      item.routes && item.routes.length ? (
+        <SubMenu key={item.path} title={<span>{item.title}</span>}>
+          {generateSubmenu(item.routes)}
+        </SubMenu>
+      ) : (
+        <Item key={item.path} onClick={() => onRedirect(item)}>
+          <span>{item.title}</span>
+        </Item>
+      )
+    );
+  };
+
   return <Layout>
   <Header style={{ height: 56, padding: '0 10px 0 35px' }}>
     <div className={styles.info}>
       <div className={styles.logo}>
         <Link to="/">
-          <img
-            width="196"
-            height="25"
-            alt="行业云统一管理控制台"
-            src="https://gw.alipayobjects.com/mdn/rms_148848/afts/img/A*smmhTrGZw-cAAAAAAAAAAAAAARQnAQ"
-          />
+          Logo
         </Link>
       </div>
       <div className={styles.user}>
@@ -82,24 +92,18 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       collapsible
       style={{ position: 'relative', zIndex: 9, boxShadow: '2px 0 6px 0 rgba(0,21,41,0.12)' }}
     >
-      <Menu mode="inline" style={{ height: '100%', borderRight: 0 }}>
-        {route.routes.map((item: IRoute) =>
-          item.routes && item.routes.length ? (
-            <SubMenu key={item.path} title={<span>{item.title}</span>}>
-              {generateSubmenu(item.routes)}
-            </SubMenu>
-          ) : (
-            <Item key={item.path} onClick={() => onRedirect(item)}>
-              <span>{item.title}</span>
-            </Item>
-          ),
-        )}
-      </Menu>
+      <Menu
+        mode="inline"
+        style={{ height: '100%', borderRight: 0 }}
+        items={items()}
+      />
     </Sider>
     <Layout>
-      <Content className={styles.masterContent}>{children}</Content>
+      <Content className={styles.masterContent}>
+        {useOutlet()}
+      </Content>
       <Footer style={{ textAlign: 'center', fontSize: 13, padding: 18 }}>
-        ©2021 支付宝（杭州）信息技术有限公司
+        ©2022 XXX（XX）信息技术有限公司
       </Footer>
     </Layout>
   </Layout>
@@ -107,4 +111,3 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
 };
 
 export default BasicLayout;
-
