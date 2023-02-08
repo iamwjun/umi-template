@@ -5,7 +5,13 @@ export default defineConfig({
   chainWebpack(memo) {
     memo.plugin('case-sensitive-paths').use(CaseSensitivePathsPlugin);
   },
+  codeSplitting: {
+    jsStrategy: 'granularChunks'
+  },
   npmClient: "pnpm",
+  history: {
+    type: "hash"
+  },
   routes: [
     {
       path: '/login',
