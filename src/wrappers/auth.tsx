@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'umi'
  
 export default () => {
-  const { isLogin } = { isLogin: true };
+  const { isLogin } = { isLogin: false };
 
   if (isLogin) {
     return <Outlet />;

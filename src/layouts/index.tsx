@@ -1,113 +1,73 @@
-import React from 'react';
-import { Layout, Menu } from 'antd';
-import { history, IRoute, Link, useOutlet, Outlet, useOutletContext } from 'umi';
+import React, { useState } from 'react';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from '@ant-design/icons';
+import { Layout, Menu, Button, theme } from 'antd';
 
-import styles from './index.less';
+const { Header, Sider, Content } = Layout;
 
-// export default function Layout(props: any) {
-//   return (
-//     <div className={styles.navs}>
-//       <ul>
-//         <li>
-//           <Link to="/">Hom2e</Link>
-//         </li>
-//         <li>
-//           <Link to="/first">/first</Link>
-//         </li>
-//         <li>
-//           <Link to="/second">/second</Link>
-//         </li>
-//         <li>
-//           <Link to="/three">/three</Link>
-//         </li>
-//         <li>
-//           <a href="https://github.com/umijs/umi">Github</a>
-//         </li>
-//       </ul>
-//     </div>
-//   );
-// }
+const App: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
 
-interface BasicLayoutProps {
-  route: {
-    routes: IRoute[];
-  };
-  children: React.ReactElement;
-}
-
-const { Item, SubMenu } = Menu;
-const { Header, Content, Footer, Sider } = Layout;
-
-
-const BasicLayout: React.FC<BasicLayoutProps> = () => {
-  const props = useOutletContext();
-
-  console.log('props', props);
-  
-  const onRedirect = (config: IRoute) => {
-    if (config.path) {
-      history.push(config.path);
-    }
-  };
-
-  const generateSubmenu = (item: IRoute) => {
-    return item.map((menu: { path: string; title: string }) => (
-      <Item key={menu.path} onClick={() => onRedirect(menu)}>
-        {menu.title}
-      </Item>
-    ));
-  };
-
-  const items = () => {
-    return (props?.route?.routes || []).map((item: IRoute) =>
-      item.routes && item.routes.length ? (
-        <SubMenu key={item.path} title={<span>{item.title}</span>}>
-          {generateSubmenu(item.routes)}
-        </SubMenu>
-      ) : (
-        <Item key={item.path} onClick={() => onRedirect(item)}>
-          <span>{item.title}</span>
-        </Item>
-      )
-    );
-  };
-
-  return <Layout>
-  <Header style={{ height: 56, padding: '0 10px 0 35px' }}>
-    <div className={styles.info}>
-      <div className={styles.logo}>
-        <Link to="/">
-          Logo
-        </Link>
-      </div>
-      <div className={styles.user}>
-        <span style={{ color: '#FFF', paddingRight: 10 }}>欢迎你！Developer</span>
-      </div>
-    </div>
-  </Header>
-  <Layout>
-    <Sider
-      trigger={null}
-      collapsedWidth={60}
-      collapsible
-      style={{ position: 'relative', zIndex: 9, boxShadow: '2px 0 6px 0 rgba(0,21,41,0.12)' }}
-    >
-      <Menu
-        mode="inline"
-        style={{ height: '100%', borderRight: 0 }}
-        items={items()}
-      />
-    </Sider>
-    <Layout>
-      <Content className={styles.masterContent}>
-        {useOutlet()}
-      </Content>
-      <Footer style={{ textAlign: 'center', fontSize: 13, padding: 18 }}>
-        ©2022 XXX（XX）信息技术有限公司
-      </Footer>
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="demo-logo-vertical" />
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          items={[
+            {
+              key: '1',
+              icon: <UserOutlined />,
+              label: 'nav 1',
+            },
+            {
+              key: '2',
+              icon: <VideoCameraOutlined />,
+              label: 'nav 2',
+            },
+            {
+              key: '3',
+              icon: <UploadOutlined />,
+              label: 'nav 3',
+            },
+          ]}
+        />
+      </Sider>
+      <Layout>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            style={{
+              fontSize: '16px',
+              width: 64,
+              height: 64,
+            }}
+          />
+        </Header>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            background: colorBgContainer,
+          }}
+        >
+          Content
+        </Content>
+      </Layout>
     </Layout>
-  </Layout>
-</Layout>;
+  );
 };
 
-export default BasicLayout;
+export default App;
