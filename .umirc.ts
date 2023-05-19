@@ -8,6 +8,9 @@ export default defineConfig({
   codeSplitting: {
     jsStrategy: 'granularChunks'
   },
+  layout: {
+    title: 'your app title',
+  },
   npmClient: "pnpm",
   history: {
     type: "hash"

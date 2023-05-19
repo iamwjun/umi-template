@@ -1,11 +1,21 @@
-import { Navigate, Outlet } from 'umi'
- 
-export default () => {
-  const { isLogin } = { isLogin: false };
+import { Navigate, Outlet } from 'umi';
+import { useQuery } from '@tanstack/react-query';
 
-  if (isLogin) {
-    return <Outlet />;
-  } else {
-    return <Navigate to="/login" />;
-  }
+export default () => {
+  const { isLogin } = { isLogin: true };
+  // const { isLoading, error, data } = useQuery({
+  //   queryKey: ['repoData'],
+  //   queryFn: () =>
+  //     fetch('/api/login').then(
+  //       (res) => res.json(),
+  //     ),
+  // })
+  // console.log(isLoading, error, data);
+  
+
+  // if (isLoading) return 'Loading...';
+
+  if (isLogin) return <Outlet />;
+
+  return <Navigate to="/login" />;
 };
