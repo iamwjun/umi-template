@@ -6,11 +6,10 @@ export default [
   },
   {
     path: '/',
-    layout: false,
+    layout: true,
     wrappers: [
       '@/wrappers/auth',
     ],
-    component: '@/layouts/index',
     routes: [
       { path: "/", component: "@/pages/index", title: "首页" },
       { path: "/first", component: "@/pages/first", title: "页面1" },
